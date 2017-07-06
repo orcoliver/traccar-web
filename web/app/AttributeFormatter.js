@@ -51,11 +51,6 @@ Ext.define('Traccar.AttributeFormatter', {
         return Ext.getStore('DistanceUnits').convertValue(value, Traccar.app.getPreference('distanceUnit'));
     },
 
-    hoursFormatter: function (value) {
-        var hours = Math.round(value / 3600000);
-        return (hours + ' ' + Strings.sharedHourAbbreviation);
-    },
-
     durationFormatter: function (value) {
         var hours, minutes;
         hours = Math.floor(value / 3600000);
@@ -65,6 +60,18 @@ Ext.define('Traccar.AttributeFormatter', {
 
     deviceIdFormatter: function (value) {
         return Ext.getStore('Devices').getById(value).get('name');
+    },
+
+    groupIdFormatter: function (value) {
+        var group, store;
+        if (value !== 0) {
+            store = Ext.getStore('AllGroups');
+            if (store.getTotalCount() === 0) {
+                store = Ext.getStore('Groups');
+            }
+            group = store.getById(value);
+            return group ? group.get('name') : value;
+        }
     },
 
     lastUpdateFormatter: function (value) {
@@ -114,14 +121,16 @@ Ext.define('Traccar.AttributeFormatter', {
             return this.courseFormatter;
         } else if (key === 'distance' || key === 'accuracy') {
             return this.distanceFormatter;
-        } else if (key === 'hours') {
-            return this.hoursFormatter;
         } else if (key === 'duration') {
             return this.durationFormatter;
         } else if (key === 'deviceId') {
             return this.deviceIdFormatter;
+        } else if (key === 'groupId') {
+            return this.groupIdFormatter;
         } else if (key === 'lastUpdate') {
             return this.lastUpdateFormatter;
+        } else if (key === 'spentFuel') {
+            return this.numberFormatterFactory(Traccar.Style.numberPrecision, Strings.sharedLiterAbbreviation);
         } else {
             return this.defaultFormatter;
         }
