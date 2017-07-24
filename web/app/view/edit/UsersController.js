@@ -28,6 +28,7 @@ Ext.define('Traccar.view.edit.UsersController', {
         'Traccar.view.permissions.UserCalendars',
         'Traccar.view.permissions.UserUsers',
         'Traccar.view.permissions.UserAttributes',
+        'Traccar.view.permissions.UserDrivers',
         'Traccar.view.Notifications',
         'Traccar.view.BaseWindow',
         'Traccar.model.User'
@@ -76,7 +77,6 @@ Ext.define('Traccar.view.edit.UsersController', {
                 linkObjectName: 'deviceId',
                 storeName: 'AllDevices',
                 linkStoreName: 'Devices',
-                urlApi: 'api/permissions/devices',
                 baseObject: user.getId()
             }
         }).show();
@@ -92,7 +92,6 @@ Ext.define('Traccar.view.edit.UsersController', {
                 linkObjectName: 'groupId',
                 storeName: 'AllGroups',
                 linkStoreName: 'Groups',
-                urlApi: 'api/permissions/groups',
                 baseObject: user.getId()
             }
         }).show();
@@ -108,7 +107,6 @@ Ext.define('Traccar.view.edit.UsersController', {
                 linkObjectName: 'geofenceId',
                 storeName: 'AllGeofences',
                 linkStoreName: 'Geofences',
-                urlApi: 'api/permissions/geofences',
                 baseObject: user.getId()
             }
         }).show();
@@ -135,7 +133,6 @@ Ext.define('Traccar.view.edit.UsersController', {
                 linkObjectName: 'calendarId',
                 storeName: 'AllCalendars',
                 linkStoreName: 'Calendars',
-                urlApi: 'api/permissions/calendars',
                 baseObject: user.getId()
             }
         }).show();
@@ -150,7 +147,6 @@ Ext.define('Traccar.view.edit.UsersController', {
                 baseObjectName: 'userId',
                 linkObjectName: 'managedUserId',
                 storeName: 'Users',
-                urlApi: 'api/permissions/users',
                 baseObject: user.getId()
             }
         }).show();
@@ -166,7 +162,21 @@ Ext.define('Traccar.view.edit.UsersController', {
                 linkObjectName: 'attributeId',
                 storeName: 'AllComputedAttributes',
                 linkStoreName: 'ComputedAttributes',
-                urlApi: 'api/permissions/attributes',
+                baseObject: user.getId()
+            }
+        }).show();
+    },
+
+    onDriversClick: function () {
+        var user = this.getView().getSelectionModel().getSelection()[0];
+        Ext.create('Traccar.view.BaseWindow', {
+            title: Strings.sharedDrivers,
+            items: {
+                xtype: 'userDriversView',
+                baseObjectName: 'userId',
+                linkObjectName: 'driverId',
+                storeName: 'AllDrivers',
+                linkStoreName: 'Drivers',
                 baseObject: user.getId()
             }
         }).show();
@@ -181,6 +191,7 @@ Ext.define('Traccar.view.edit.UsersController', {
         this.lookupReference('userNotificationsButton').setDisabled(disabled);
         this.lookupReference('userCalendarsButton').setDisabled(disabled);
         this.lookupReference('userAttributesButton').setDisabled(disabled);
+        this.lookupReference('userDriversButton').setDisabled(disabled);
         this.lookupReference('userUsersButton').setDisabled(disabled || selected[0].get('userLimit') === 0);
         this.callParent(arguments);
     }

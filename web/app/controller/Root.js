@@ -105,6 +105,7 @@ Ext.define('Traccar.controller.Root', {
     loadApp: function () {
         var attribution, eventId;
         Ext.getStore('Groups').load();
+        Ext.getStore('Drivers').load();
         Ext.getStore('Geofences').load();
         Ext.getStore('Calendars').load();
         Ext.getStore('AttributeAliases').load();
@@ -161,7 +162,7 @@ Ext.define('Traccar.controller.Root', {
         socket = new WebSocket(protocol + '//' + window.location.host + pathname + 'api/socket');
 
         socket.onclose = function (event) {
-            Ext.toast(Strings.errorSocket, Strings.errorTitle, 'br');
+            Traccar.app.showToast(Strings.errorSocket, Strings.errorTitle);
 
             Ext.Ajax.request({
                 url: 'api/devices',
@@ -214,7 +215,8 @@ Ext.define('Traccar.controller.Root', {
             if (entity) {
                 entity.set({
                     status: array[i].status,
-                    lastUpdate: array[i].lastUpdate
+                    lastUpdate: array[i].lastUpdate,
+                    geofenceIds: array[i].geofenceIds
                 }, {
                     dirty: false
                 });
@@ -232,6 +234,9 @@ Ext.define('Traccar.controller.Root', {
             } else {
                 store.add(Ext.create('Traccar.model.Position', array[i]));
             }
+            if (Ext.getStore('Events').findRecord('positionId', array[i].id, 0, false, false, true)) {
+                Ext.getStore('EventPositions').add(Ext.create('Traccar.model.Position', array[i]));
+            }
         }
         if (first) {
             this.zoomToAllDevices();
@@ -248,7 +253,7 @@ Ext.define('Traccar.controller.Root', {
                 if (this.soundPressed()) {
                     this.beep();
                 }
-                Ext.toast(array[i].text, device.get('name'), 'br');
+                Traccar.app.showToast(array[i].text, device.get('name'));
             }
         }
     },

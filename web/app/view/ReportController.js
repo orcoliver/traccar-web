@@ -184,10 +184,10 @@ Ext.define('Traccar.view.ReportController', {
         }
     },
 
-    onSelectionChange: function (selected) {
+    onSelectionChange: function (selection, selected) {
         var report;
-        if (selected.getCount() > 0) {
-            report = selected.getLastSelected();
+        if (selected.length > 0) {
+            report = selected[0];
             this.fireEvent('selectreport', report, true);
             if (report instanceof Traccar.model.ReportTrip) {
                 this.selectTrip(report);
@@ -456,11 +456,7 @@ Ext.define('Traccar.view.ReportController', {
     }, {
         text: Strings.sharedGeofence,
         dataIndex: 'geofenceId',
-        renderer: function (value) {
-            if (value !== 0) {
-                return Ext.getStore('Geofences').getById(value).get('name');
-            }
-        }
+        renderer: Traccar.AttributeFormatter.getFormatter('geofenceId')
     }],
 
     summaryColumns: [{
@@ -531,6 +527,10 @@ Ext.define('Traccar.view.ReportController', {
         text: Strings.reportSpentFuel,
         dataIndex: 'spentFuel',
         renderer: Traccar.AttributeFormatter.getFormatter('spentFuel')
+    }, {
+        text: Strings.sharedDriver,
+        dataIndex: 'driverUniqueId',
+        renderer: Traccar.AttributeFormatter.getFormatter('driverUniqueId')
     }],
 
     stopsColumns: [{

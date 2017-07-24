@@ -22,6 +22,11 @@ Ext.define('Traccar.view.EventsController', {
 
     config: {
         listen: {
+            controller: {
+                '*': {
+                    deselectevent: 'deselectEvent'
+                }
+            },
             store: {
                 '#Events': {
                     add: 'onAddEvent'
@@ -37,16 +42,29 @@ Ext.define('Traccar.view.EventsController', {
         }, Traccar.Style.refreshPeriod);
 
         if (Traccar.app.isMobile()) {
-            this.lookupReference('hideEvents').setHidden(false);
+            this.lookupReference('hideEventsButton').setHidden(false);
+        }
+    },
+
+    onRemoveClick: function (button) {
+        var event, positionId;
+        event = this.getView().getSelectionModel().getSelection()[0];
+        if (event) {
+            Ext.getStore('Events').remove(event);
+            positionId = event.get('positionId');
+            if (positionId && !Ext.getStore('Events').findRecord('positionId', positionId, 0, false, false, true)) {
+                Ext.getStore('EventPositions').remove(Ext.getStore('EventPositions').getById(positionId));
+            }
         }
     },
 
     onClearClick: function (button) {
         Ext.getStore('Events').removeAll();
+        Ext.getStore('EventPositions').removeAll();
     },
 
     onAddEvent: function (store, data) {
-        if (this.lookupReference('scrollToLast').pressed) {
+        if (this.lookupReference('scrollToLastButton').pressed) {
             this.getView().scrollBy(0, Number.POSITIVE_INFINITY, true);
         }
     },
@@ -59,5 +77,23 @@ Ext.define('Traccar.view.EventsController', {
 
     onHideEvents: function () {
         Traccar.app.showEvents(false);
+    },
+
+    deselectEvent: function () {
+        this.getView().getSelectionModel().deselectAll();
+    },
+
+    onSelectionChange: function (selection, selected) {
+        var event, positionId;
+        event = selected.length > 0 ? selected[0] : null;
+        if (event) {
+            positionId = event.get('positionId');
+            if (positionId) {
+                this.fireEvent('selectevent', Ext.getStore('EventPositions').getById(positionId));
+            } else {
+                this.fireEvent('selectevent');
+            }
+        }
+        this.lookupReference('removeEventButton').setDisabled(!event);
     }
 });

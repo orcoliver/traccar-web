@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2017 Anton Tananaev (anton@traccar.org)
+ * Copyright 2017 Anton Tananaev (anton@traccar.org)
  * Copyright 2017 Andrey Kunitsyn (andrey@traccar.org)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Ext.define('Traccar.store.Events', {
-    extend: 'Ext.data.Store',
-    model: 'Traccar.model.Event',
+Ext.define('Traccar.view.edit.DriversController', {
+    extend: 'Traccar.view.edit.ToolbarController',
+    alias: 'controller.drivers',
 
-    trackRemoved: false,
+    requires: [
+        'Traccar.view.dialog.Driver',
+        'Traccar.model.Driver'
+    ],
 
-    proxy: {
-        type: 'rest',
-        url: 'api/events'
-    }
+    objectModel: 'Traccar.model.Driver',
+    objectDialog: 'Traccar.view.dialog.Driver',
+    removeTitle: Strings.sharedDriver
+
 });

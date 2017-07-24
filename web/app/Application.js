@@ -40,7 +40,8 @@ Ext.define('Traccar.Application', {
         'ReportTrip',
         'ReportStop',
         'Calendar',
-        'KnownAttribute'
+        'KnownAttribute',
+        'Driver'
     ],
 
     stores: [
@@ -50,6 +51,7 @@ Ext.define('Traccar.Application', {
         'AllDevices',
         'Positions',
         'LatestPositions',
+        'EventPositions',
         'Users',
         'Attributes',
         'MapTypes',
@@ -89,7 +91,9 @@ Ext.define('Traccar.Application', {
         'ComputedAttributes',
         'AllComputedAttributes',
         'PositionAttributes',
-        'AttributeValueTypes'
+        'AttributeValueTypes',
+        'Drivers',
+        'AllDrivers'
     ],
 
     controllers: [
@@ -185,5 +189,14 @@ Ext.define('Traccar.Application', {
         } else {
             Ext.Msg.alert(Strings.errorTitle, Strings.errorConnection);
         }
+    },
+
+    showToast: function (message, title) {
+        Ext.toast({
+            html: message,
+            title: title,
+            width: Traccar.Style.toastWidth,
+            align: 'br'
+        });
     }
 });
