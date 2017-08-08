@@ -304,24 +304,25 @@ Ext.define('Traccar.view.map.MapMarkerController', {
 
     loadReport: function (store, data) {
         var i, position, point;
+        if (data) {
+            this.addReportMarkers(store, data);
 
-        this.addReportMarkers(store, data);
-
-        this.reportRoute = [];
-        for (i = 0; i < data.length; i++) {
-            position = data[i];
-            point = ol.proj.fromLonLat([
-                position.get('longitude'),
-                position.get('latitude')
-            ]);
-            if (i === 0 || data[i].get('deviceId') !== data[i - 1].get('deviceId')) {
-                this.reportRoute.push(new ol.Feature({
-                    geometry: new ol.geom.LineString([])
-                }));
-                this.reportRoute[this.reportRoute.length - 1].setStyle(this.getRouteStyle(data[i].get('deviceId')));
-                this.getView().getRouteSource().addFeature(this.reportRoute[this.reportRoute.length - 1]);
+            this.reportRoute = [];
+            for (i = 0; i < data.length; i++) {
+                position = data[i];
+                point = ol.proj.fromLonLat([
+                    position.get('longitude'),
+                    position.get('latitude')
+                ]);
+                if (i === 0 || data[i].get('deviceId') !== data[i - 1].get('deviceId')) {
+                    this.reportRoute.push(new ol.Feature({
+                        geometry: new ol.geom.LineString([])
+                    }));
+                    this.reportRoute[this.reportRoute.length - 1].setStyle(this.getRouteStyle(data[i].get('deviceId')));
+                    this.getView().getRouteSource().addFeature(this.reportRoute[this.reportRoute.length - 1]);
+                }
+                this.reportRoute[this.reportRoute.length - 1].getGeometry().appendCoordinate(point);
             }
-            this.reportRoute[this.reportRoute.length - 1].getGeometry().appendCoordinate(point);
         }
     },
 
@@ -495,11 +496,12 @@ Ext.define('Traccar.view.map.MapMarkerController', {
     },
 
     selectEvent: function (position) {
+        var marker;
         this.fireEvent('deselectfeature');
         if (position) {
-            var maker = this.addReportMarker(position);
-            maker.set('event', true);
-            this.selectMarker(maker, true);
+            marker = this.addReportMarker(position);
+            marker.set('event', true);
+            this.selectMarker(marker, true);
         } else if (this.selectedMarker && this.selectedMarker.get('event')) {
             this.selectMarker(null, false);
         }
