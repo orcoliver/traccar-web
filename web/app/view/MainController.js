@@ -15,9 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-Ext.define('Traccar.store.ServerAttributes', {
-    extend: 'Ext.data.Store',
-    model: 'Traccar.model.KnownAttribute',
+Ext.define('Traccar.view.MainController', {
+    extend: 'Ext.app.ViewController',
+    alias: 'controller.mainController',
 
-    data: []
+    init: function () {
+        this.lookupReference('reportView').setHidden(Traccar.app.getBooleanAttributePreference('ui.disableReport'));
+    }
 });

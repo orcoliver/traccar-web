@@ -46,7 +46,7 @@ Ext.define('Traccar.view.EventsController', {
         }
     },
 
-    onRemoveClick: function (button) {
+    onRemoveClick: function () {
         var event, positionId;
         event = this.getView().getSelectionModel().getSelection()[0];
         if (event) {
@@ -58,12 +58,12 @@ Ext.define('Traccar.view.EventsController', {
         }
     },
 
-    onClearClick: function (button) {
+    onClearClick: function () {
         Ext.getStore('Events').removeAll();
         Ext.getStore('EventPositions').removeAll();
     },
 
-    onAddEvent: function (store, data) {
+    onAddEvent: function () {
         if (this.lookupReference('scrollToLastButton').pressed) {
             this.getView().scrollBy(0, Number.POSITIVE_INFINITY, true);
         }
@@ -84,12 +84,28 @@ Ext.define('Traccar.view.EventsController', {
     },
 
     onSelectionChange: function (selection, selected) {
-        var event, positionId;
+        var event, positionId, position;
         event = selected.length > 0 ? selected[0] : null;
         if (event) {
             positionId = event.get('positionId');
             if (positionId) {
-                this.fireEvent('selectevent', Ext.getStore('EventPositions').getById(positionId));
+                position = Ext.getStore('EventPositions').getById(positionId);
+                if (position) {
+                    this.fireEvent('selectevent', position);
+                } else {
+                    Ext.getStore('EventPositions').load({
+                        params: {
+                            id: positionId
+                        },
+                        scope: this,
+                        addRecords: true,
+                        callback: function (records, operation, success) {
+                            if (success && records.length > 0) {
+                                this.fireEvent('selectevent', records[0]);
+                            }
+                        }
+                    });
+                }
             } else {
                 this.fireEvent('selectevent');
             }

@@ -17,6 +17,7 @@
 
 Ext.define('Traccar.controller.Root', {
     extend: 'Ext.app.Controller',
+    alias: 'controller.root',
 
     requires: [
         'Traccar.view.dialog.Login',
@@ -51,6 +52,7 @@ Ext.define('Traccar.controller.Root', {
         if (value !== undefined) {
             return Traccar.AttributeFormatter.getAttributeConverter(this.attributeKey)(value);
         }
+        return null;
     },
 
     onLaunch: function () {
@@ -111,6 +113,13 @@ Ext.define('Traccar.controller.Root', {
         Ext.getStore('AttributeAliases').load();
         Ext.getStore('ComputedAttributes').load();
         this.initReportEventTypesStore();
+
+        Ext.getStore('ServerAttributes').loadData(Ext.getStore('CommonDeviceAttributes').getData().items, true);
+        Ext.getStore('ServerAttributes').loadData(Ext.getStore('CommonUserAttributes').getData().items, true);
+        Ext.getStore('UserAttributes').loadData(Ext.getStore('CommonUserAttributes').getData().items, true);
+        Ext.getStore('DeviceAttributes').loadData(Ext.getStore('CommonDeviceAttributes').getData().items, true);
+        Ext.getStore('GroupAttributes').loadData(Ext.getStore('CommonDeviceAttributes').getData().items, true);
+
         Ext.getStore('Devices').load({
             scope: this,
             callback: function () {
@@ -161,7 +170,7 @@ Ext.define('Traccar.controller.Root', {
         pathname = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
         socket = new WebSocket(protocol + '//' + window.location.host + pathname + 'api/socket');
 
-        socket.onclose = function (event) {
+        socket.onclose = function () {
             Traccar.app.showToast(Strings.errorSocket, Strings.errorTitle);
 
             Ext.Ajax.request({
@@ -225,7 +234,7 @@ Ext.define('Traccar.controller.Root', {
     },
 
     updatePositions: function (array, first) {
-        var i, store, entity;
+        var i, store, entity, deviceId, device;
         store = Ext.getStore('LatestPositions');
         for (i = 0; i < array.length; i++) {
             entity = store.findRecord('deviceId', array[i].deviceId, 0, false, false, true);
@@ -239,7 +248,16 @@ Ext.define('Traccar.controller.Root', {
             }
         }
         if (first) {
-            this.zoomToAllDevices();
+            deviceId = Ext.Object.fromQueryString(window.location.search).deviceId;
+            if (deviceId) {
+                device = Ext.getStore('VisibleDevices').findRecord('id', deviceId, 0, false, true, true);
+                if (device) {
+                    this.fireEvent('selectdevice', device, true);
+                }
+            }
+            if (!device) {
+                this.zoomToAllDevices();
+            }
         }
     },
 
@@ -281,7 +299,10 @@ Ext.define('Traccar.controller.Root', {
                 if (success) {
                     for (i = 0; i < records.length; i++) {
                         value = records[i].get('type');
-                        store.add({type: value, name: Traccar.app.getEventString(value)});
+                        store.add({
+                            type: value,
+                            name: Traccar.app.getEventString(value)
+                        });
                     }
                 }
             }
