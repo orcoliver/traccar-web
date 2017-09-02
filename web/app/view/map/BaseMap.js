@@ -30,7 +30,7 @@ Ext.define('Traccar.view.map.BaseMap', {
     },
 
     initMap: function () {
-        var server, layer, type, bingKey, lat, lon, zoom, target;
+        var server, layer, type, bingKey, lat, lon, zoom, maxZoom, target;
 
         server = Traccar.app.getServer();
 
@@ -161,11 +161,12 @@ Ext.define('Traccar.view.map.BaseMap', {
         lat = Traccar.app.getPreference('latitude', Traccar.Style.mapDefaultLat);
         lon = Traccar.app.getPreference('longitude', Traccar.Style.mapDefaultLon);
         zoom = Traccar.app.getPreference('zoom', Traccar.Style.mapDefaultZoom);
+        maxZoom = Traccar.app.getAttributePreference('web.maxZoom', Traccar.Style.mapMaxZoom);
 
         this.mapView = new ol.View({
             center: ol.proj.fromLonLat([lon, lat]),
             zoom: zoom,
-            maxZoom: Traccar.Style.mapMaxZoom
+            maxZoom: maxZoom
         });
 
         this.map = new ol.Map({
@@ -173,6 +174,22 @@ Ext.define('Traccar.view.map.BaseMap', {
             layers: [layer],
             view: this.mapView
         });
+
+        switch (Traccar.app.getPreference('distanceUnit', 'km')) {
+            case 'mi':
+                this.map.addControl(new ol.control.ScaleLine({
+                    units: 'us'
+                }));
+                break;
+            case 'nmi':
+                this.map.addControl(new ol.control.ScaleLine({
+                    units: 'nautical'
+                }));
+                break;
+            default:
+                this.map.addControl(new ol.control.ScaleLine());
+                break;
+        }
 
         target = this.map.getTarget();
         if (typeof target === 'string') {
