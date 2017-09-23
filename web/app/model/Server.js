@@ -32,6 +32,9 @@ Ext.define('Traccar.model.Server', {
         name: 'deviceReadonly',
         type: 'boolean'
     }, {
+        name: 'limitCommands',
+        type: 'boolean'
+    }, {
         name: 'map',
         type: 'string'
     }, {
@@ -39,12 +42,6 @@ Ext.define('Traccar.model.Server', {
         type: 'string'
     }, {
         name: 'mapUrl',
-        type: 'string'
-    }, {
-        name: 'distanceUnit',
-        type: 'string'
-    }, {
-        name: 'speedUnit',
         type: 'string'
     }, {
         name: 'latitude',
@@ -63,9 +60,6 @@ Ext.define('Traccar.model.Server', {
         type: 'boolean'
     }, {
         name: 'coordinateFormat',
-        type: 'string'
-    }, {
-        name: 'timezone',
         type: 'string'
     }, {
         name: 'attributes'

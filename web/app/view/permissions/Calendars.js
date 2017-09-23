@@ -1,5 +1,6 @@
 /*
- * Copyright 2016 Anton Tananaev (anton@traccar.org)
+ * Copyright 2016 - 2017 Anton Tananaev (anton@traccar.org)
+ * Copyright 2016 - 2017 Andrey Kunitsyn (andrey@traccar.org)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,29 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Ext.define('Traccar.model.Notification', {
-    extend: 'Ext.data.Model',
-    identifier: 'negative',
+Ext.define('Traccar.view.permissions.Calendars', {
+    extend: 'Traccar.view.permissions.Base',
+    xtype: 'linkCalendarsView',
 
-    fields: [{
-        name: 'id',
-        type: 'int'
-    }, {
-        name: 'type',
-        type: 'string'
-    }, {
-        name: 'always',
-        type: 'bool'
-    }, {
-        name: 'attributes'
-    }, {
-        name: 'web',
-        type: 'bool'
-    }, {
-        name: 'mail',
-        type: 'bool'
-    }, {
-        name: 'sms',
-        type: 'bool'
-    }]
+    requires: [
+        'Ext.grid.filters.Filters'
+    ],
+
+    plugins: 'gridfilters',
+
+    columns: {
+        items: [{
+            text: Strings.sharedName,
+            dataIndex: 'name',
+            flex: 1,
+            minWidth: Traccar.Style.columnWidthNormal,
+            filter: 'string'
+        }]
+    }
 });

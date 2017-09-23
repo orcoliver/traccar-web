@@ -20,11 +20,12 @@ Ext.define('Traccar.view.edit.DevicesController', {
     alias: 'controller.devices',
 
     requires: [
-        'Traccar.view.dialog.Command',
+        'Traccar.view.dialog.SendCommand',
         'Traccar.view.dialog.Device',
-        'Traccar.view.permissions.DeviceGeofences',
-        'Traccar.view.permissions.DeviceAttributes',
-        'Traccar.view.permissions.DeviceDrivers',
+        'Traccar.view.permissions.Geofences',
+        'Traccar.view.permissions.ComputedAttributes',
+        'Traccar.view.permissions.Drivers',
+        'Traccar.view.permissions.SavedCommands',
         'Traccar.view.BaseWindow',
         'Traccar.model.Device',
         'Traccar.model.Command'
@@ -61,88 +62,51 @@ Ext.define('Traccar.view.edit.DevicesController', {
         deviceReadonly = Traccar.app.getPreference('deviceReadonly', false) && !Traccar.app.getUser().get('admin');
         readonly = Traccar.app.getPreference('readonly', false) && !Traccar.app.getUser().get('admin');
         this.lookupReference('toolbarAddButton').setDisabled(readonly || deviceReadonly);
-        this.lookupReference('toolbarDriversButton').setHidden(
-            Traccar.app.getVehicleFeaturesDisabled() || Traccar.app.getBooleanAttributePreference('ui.disableDrivers'));
-        this.lookupReference('toolbarAttributesButton').setHidden(
-            Traccar.app.getBooleanAttributePreference('ui.disableComputedAttributes'));
+        this.lookupReference('toolbarDeviceMenu').setHidden(readonly || deviceReadonly);
 
         setInterval(function () {
             self.getView().getView().refresh();
         }, Traccar.Style.refreshPeriod);
     },
 
-    onGeofencesClick: function () {
-        var device = this.getView().getSelectionModel().getSelection()[0];
-        Ext.create('Traccar.view.BaseWindow', {
-            title: Strings.sharedGeofences,
-            items: {
-                xtype: 'deviceGeofencesView',
-                baseObjectName: 'deviceId',
-                linkObjectName: 'geofenceId',
-                storeName: 'Geofences',
-                baseObject: device.getId()
-            }
-        }).show();
-    },
-
-    onAttributesClick: function () {
-        var device = this.getView().getSelectionModel().getSelection()[0];
-        Ext.create('Traccar.view.BaseWindow', {
-            title: Strings.sharedComputedAttributes,
-            items: {
-                xtype: 'deviceAttributesView',
-                baseObjectName: 'deviceId',
-                linkObjectName: 'attributeId',
-                storeName: 'ComputedAttributes',
-                baseObject: device.getId()
-            }
-        }).show();
-    },
-
-    onDriversClick: function () {
-        var device = this.getView().getSelectionModel().getSelection()[0];
-        Ext.create('Traccar.view.BaseWindow', {
-            title: Strings.sharedDrivers,
-            items: {
-                xtype: 'deviceDriversView',
-                baseObjectName: 'deviceId',
-                linkObjectName: 'driverId',
-                storeName: 'Drivers',
-                baseObject: device.getId()
-            }
-        }).show();
-    },
-
     onCommandClick: function () {
-        var device, deviceId, command, dialog, typesStore, online;
+        var device, deviceId, dialog, typesStore, online, commandsStore;
         device = this.getView().getSelectionModel().getSelection()[0];
         online = device.get('status') === 'online';
         deviceId = device.get('id');
 
-        command = Ext.create('Traccar.model.Command');
-        command.set('deviceId', deviceId);
-        command.set('textChannel', !online);
+        dialog = Ext.create('Traccar.view.dialog.SendCommand');
+        dialog.deviceId = deviceId;
+        dialog.online = online;
 
-        dialog = Ext.create('Traccar.view.dialog.Command');
+        commandsStore = dialog.lookupReference('commandsComboBox').getStore();
+        commandsStore.getProxy().setExtraParam('deviceId', deviceId);
+        if (!Traccar.app.getPreference('limitCommands', false)) {
+            commandsStore.add({
+                id: 0,
+                description: Strings.sharedNew,
+                textChannel: !online
+            });
+            typesStore = dialog.lookupReference('commandType').getStore();
+            typesStore.getProxy().setExtraParam('deviceId', deviceId);
+        }
+        commandsStore.load({
+            addRecords: true
+        });
 
-        typesStore = dialog.lookupReference('commandType').getStore();
-        typesStore.getProxy().setExtraParam('deviceId', deviceId);
-
-        dialog.down('form').loadRecord(command);
-        dialog.lookupReference('textChannelCheckBox').setDisabled(!online);
         dialog.show();
     },
 
     updateButtons: function (selected) {
-        var readonly, deviceReadonly, empty;
+        var readonly, deviceReadonly, empty, deviceMenu;
         deviceReadonly = Traccar.app.getPreference('deviceReadonly', false) && !Traccar.app.getUser().get('admin');
         readonly = Traccar.app.getPreference('readonly', false) && !Traccar.app.getUser().get('admin');
         empty = selected.length === 0;
         this.lookupReference('toolbarEditButton').setDisabled(empty || readonly || deviceReadonly);
         this.lookupReference('toolbarRemoveButton').setDisabled(empty || readonly || deviceReadonly);
-        this.lookupReference('toolbarGeofencesButton').setDisabled(empty || readonly);
-        this.lookupReference('toolbarAttributesButton').setDisabled(empty || readonly);
-        this.lookupReference('toolbarDriversButton').setDisabled(empty || readonly);
+        deviceMenu = this.lookupReference('toolbarDeviceMenu');
+        deviceMenu.device = empty ? null : selected[0];
+        deviceMenu.setDisabled(empty);
         this.lookupReference('deviceCommandButton').setDisabled(empty || readonly);
     },
 
@@ -157,7 +121,7 @@ Ext.define('Traccar.view.edit.DevicesController', {
 
     selectDevice: function (device) {
         this.getView().getSelectionModel().select([device], false, true);
-        this.updateButtons(this.getView().getSelectionModel());
+        this.updateButtons(this.getView().getSelectionModel().getSelected().items);
         this.getView().getView().focusRow(device);
     },
 
@@ -168,7 +132,7 @@ Ext.define('Traccar.view.edit.DevicesController', {
     },
 
     onUpdateDevice: function () {
-        this.updateButtons(this.getView().getSelectionModel());
+        this.updateButtons(this.getView().getSelectionModel().getSelected().items);
     },
 
     deselectFeature: function () {

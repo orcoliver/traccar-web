@@ -64,22 +64,6 @@ Ext.define('Traccar.view.dialog.User', {
                 valueField: 'key',
                 editable: false
             }, {
-                xtype: 'combobox',
-                name: 'distanceUnit',
-                fieldLabel: Strings.sharedDistance,
-                store: 'DistanceUnits',
-                displayField: 'name',
-                valueField: 'key',
-                editable: false
-            }, {
-                xtype: 'combobox',
-                name: 'speedUnit',
-                fieldLabel: Strings.settingsSpeedUnit,
-                store: 'SpeedUnits',
-                displayField: 'name',
-                valueField: 'key',
-                editable: false
-            }, {
                 xtype: 'numberfield',
                 reference: 'latitude',
                 name: 'latitude',
@@ -101,8 +85,7 @@ Ext.define('Traccar.view.dialog.User', {
                 inputValue: true,
                 uncheckedValue: false,
                 name: 'twelveHourFormat',
-                fieldLabel: Strings.settingsTwelveHourFormat,
-                allowBlank: false
+                fieldLabel: Strings.settingsTwelveHourFormat
             }, {
                 xtype: 'combobox',
                 name: 'coordinateFormat',
@@ -110,14 +93,6 @@ Ext.define('Traccar.view.dialog.User', {
                 store: 'CoordinateFormats',
                 displayField: 'name',
                 valueField: 'key',
-                editable: false
-            }, {
-                xtype: 'combobox',
-                name: 'timezone',
-                fieldLabel: Strings.sharedTimezone,
-                store: 'AllTimezones',
-                queryMode: 'local',
-                displayField: 'key',
                 editable: false
             }]
         }, {
@@ -157,6 +132,14 @@ Ext.define('Traccar.view.dialog.User', {
                 fieldLabel: Strings.userDeviceReadonly,
                 disabled: true,
                 reference: 'deviceReadonlyField'
+            }, {
+                xtype: 'checkboxfield',
+                inputValue: true,
+                uncheckedValue: false,
+                name: 'limitCommands',
+                fieldLabel: Strings.userLimitCommands,
+                disabled: true,
+                reference: 'limitCommandsField'
             }, {
                 xtype: 'datefield',
                 name: 'expirationTime',

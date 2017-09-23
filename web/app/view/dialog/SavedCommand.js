@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2017 Anton Tananaev (anton@traccar.org)
+ * Copyright 2015 - 2017 Anton Tananaev (anton@traccar.org)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,68 +15,62 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Ext.define('Traccar.view.dialog.Geofence', {
+Ext.define('Traccar.view.dialog.SavedCommand', {
     extend: 'Traccar.view.dialog.BaseEdit',
 
     requires: [
-        'Traccar.view.dialog.GeofenceController'
+        'Traccar.view.dialog.SavedCommandController'
     ],
 
-    controller: 'geofence',
-    title: Strings.sharedGeofence,
+    controller: 'savedCommand',
+    title: Strings.sharedSavedCommand,
 
-    items: {
+    items: [{
         xtype: 'form',
+        listeners: {
+            validitychange: 'onValidityChange'
+        },
         items: [{
             xtype: 'fieldset',
             title: Strings.sharedRequired,
             items: [{
                 xtype: 'textfield',
-                name: 'name',
-                fieldLabel: Strings.sharedName
-            }]
-        }, {
-            xtype: 'fieldset',
-            title: Strings.sharedExtra,
-            collapsible: true,
-            collapsed: true,
-            items: [{
-                xtype: 'textfield',
                 name: 'description',
                 fieldLabel: Strings.sharedDescription
             }, {
+                xtype: 'checkboxfield',
+                name: 'textChannel',
+                inputValue: true,
+                uncheckedValue: false,
+                fieldLabel: Strings.notificationSms
+            }, {
                 xtype: 'combobox',
-                reference: 'calendarCombo',
-                name: 'calendarId',
-                store: 'Calendars',
+                name: 'type',
+                reference: 'commandType',
+                fieldLabel: Strings.sharedType,
+                store: 'AllCommandTypes',
                 queryMode: 'local',
                 displayField: 'name',
-                valueField: 'id',
+                valueField: 'type',
                 editable: false,
-                fieldLabel: Strings.sharedCalendar
-            }, {
-                xtype: 'hiddenfield',
-                name: 'area',
                 allowBlank: false,
-                reference: 'areaField'
+                listeners: {
+                    change: 'onTypeChange'
+                }
+            }, {
+                xtype: 'fieldcontainer',
+                reference: 'parameters'
             }]
         }]
-    },
+    }],
 
     buttons: [{
-        text: Strings.sharedArea,
-        glyph: 'xf21d@FontAwesome',
-        handler: 'onAreaClick'
-    }, {
-        text: Strings.sharedAttributes,
-        handler: 'showAttributesView'
-    }, {
-        xtype: 'tbfill'
-    }, {
         glyph: 'xf00c@FontAwesome',
+        reference: 'saveButton',
         tooltip: Strings.sharedSave,
         tooltipType: 'title',
         minWidth: 0,
+        disabled: true,
         handler: 'onSaveClick'
     }, {
         glyph: 'xf00d@FontAwesome',

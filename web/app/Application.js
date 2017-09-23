@@ -35,13 +35,14 @@ Ext.define('Traccar.Application', {
         'Event',
         'Geofence',
         'Notification',
-        'AttributeAlias',
         'ReportSummary',
         'ReportTrip',
         'ReportStop',
         'Calendar',
         'KnownAttribute',
-        'Driver'
+        'Driver',
+        'KnownCommand',
+        'KnownNotification'
     ],
 
     stores: [
@@ -67,7 +68,6 @@ Ext.define('Traccar.Application', {
         'Notifications',
         'AllNotifications',
         'GeofenceTypes',
-        'AttributeAliases',
         'ReportRoute',
         'ReportEvents',
         'ReportTrips',
@@ -95,7 +95,14 @@ Ext.define('Traccar.Application', {
         'PositionAttributes',
         'AttributeValueTypes',
         'Drivers',
-        'AllDrivers'
+        'AllDrivers',
+        'KnownCommands',
+        'VolumeUnits',
+        'AllCommandTypes',
+        'Commands',
+        'AllCommands',
+        'DeviceCommands',
+        'AllNotificationTypes'
     ],
 
     controllers: [

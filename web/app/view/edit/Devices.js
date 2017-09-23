@@ -23,7 +23,8 @@ Ext.define('Traccar.view.edit.Devices', {
         'Ext.grid.filters.Filters',
         'Traccar.AttributeFormatter',
         'Traccar.view.edit.DevicesController',
-        'Traccar.view.ArrayListFilter'
+        'Traccar.view.ArrayListFilter',
+        'Traccar.view.DeviceMenu'
     ],
 
     controller: 'devices',
@@ -37,67 +38,42 @@ Ext.define('Traccar.view.edit.Devices', {
 
     tbar: {
         componentCls: 'toolbar-header-style',
+        defaults: {
+            xtype: 'button',
+            disabled: true,
+            tooltipType: 'title'
+        },
         items: [{
             xtype: 'tbtext',
             html: Strings.deviceTitle,
             baseCls: 'x-panel-header-title-default'
         }, {
-            xtype: 'tbfill'
+            xtype: 'tbfill',
+            disabled: false
         }, {
-            xtype: 'button',
-            disabled: true,
             handler: 'onAddClick',
             reference: 'toolbarAddButton',
             glyph: 'xf067@FontAwesome',
-            tooltip: Strings.sharedAdd,
-            tooltipType: 'title'
+            tooltip: Strings.sharedAdd
         }, {
-            xtype: 'button',
-            disabled: true,
             handler: 'onEditClick',
             reference: 'toolbarEditButton',
             glyph: 'xf040@FontAwesome',
-            tooltip: Strings.sharedEdit,
-            tooltipType: 'title'
+            tooltip: Strings.sharedEdit
         }, {
-            xtype: 'button',
-            disabled: true,
             handler: 'onRemoveClick',
             reference: 'toolbarRemoveButton',
             glyph: 'xf00d@FontAwesome',
-            tooltip: Strings.sharedRemove,
-            tooltipType: 'title'
+            tooltip: Strings.sharedRemove
         }, {
-            xtype: 'button',
-            disabled: true,
-            handler: 'onGeofencesClick',
-            reference: 'toolbarGeofencesButton',
-            glyph: 'xf21d@FontAwesome',
-            tooltip: Strings.sharedGeofences,
-            tooltipType: 'title'
-        }, {
-            xtype: 'button',
-            disabled: true,
-            handler: 'onAttributesClick',
-            reference: 'toolbarAttributesButton',
-            glyph: 'xf0ae@FontAwesome',
-            tooltip: Strings.sharedComputedAttributes,
-            tooltipType: 'title'
-        }, {
-            xtype: 'button',
-            disabled: true,
-            handler: 'onDriversClick',
-            reference: 'toolbarDriversButton',
-            glyph: 'xf2c2@FontAwesome',
-            tooltip: Strings.sharedDrivers,
-            tooltipType: 'title'
-        }, {
-            disabled: true,
             handler: 'onCommandClick',
             reference: 'deviceCommandButton',
             glyph: 'xf093@FontAwesome',
-            tooltip: Strings.deviceCommand,
-            tooltipType: 'title'
+            tooltip: Strings.deviceCommand
+        }, {
+            xtype: 'deviceMenu',
+            reference: 'toolbarDeviceMenu',
+            enableToggle: false
         }]
     },
 

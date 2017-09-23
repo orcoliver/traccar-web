@@ -16,39 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Ext.define('Traccar.model.ReportStop', {
-    extend: 'Ext.data.Model',
-    identifier: 'negative',
+Ext.define('Traccar.view.permissions.Drivers', {
+    extend: 'Traccar.view.permissions.Base',
+    xtype: 'linkDriversView',
 
-    fields: [{
-        name: 'deviceId',
-        type: 'int'
-    }, {
-        name: 'deviceName',
-        type: 'string'
-    }, {
-        name: 'duration',
-        type: 'int'
-    }, {
-        name: 'startTime',
-        type: 'date',
-        dateFormat: 'c'
-    }, {
-        name: 'address',
-        type: 'string'
-    }, {
-        name: 'endTime',
-        type: 'date',
-        dateFormat: 'c'
-    }, {
-        name: 'engineHours',
-        type: 'int'
-    }, {
-        name: 'positionId',
-        type: 'int'
-    }, {
-        name: 'spentFuel',
-        type: 'float',
-        convert: Traccar.AttributeFormatter.getConverter('spentFuel')
-    }]
+    requires: [
+        'Ext.grid.filters.Filters'
+    ],
+
+    plugins: 'gridfilters',
+
+    columns: {
+        items: [{
+            text: Strings.sharedName,
+            dataIndex: 'name',
+            flex: 1,
+            minWidth: Traccar.Style.columnWidthNormal,
+            filter: 'string'
+        }, {
+            text: Strings.deviceIdentifier,
+            dataIndex: 'uniqueId',
+            flex: 1,
+            minWidth: Traccar.Style.columnWidthNormal,
+            filter: 'string'
+        }]
+    }
 });

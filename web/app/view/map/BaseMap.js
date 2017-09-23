@@ -175,7 +175,9 @@ Ext.define('Traccar.view.map.BaseMap', {
             view: this.mapView
         });
 
-        switch (Traccar.app.getPreference('distanceUnit', 'km')) {
+        this.body.dom.tabIndex = 0;
+
+        switch (Traccar.app.getAttributePreference('distanceUnit', 'km')) {
             case 'mi':
                 this.map.addControl(new ol.control.ScaleLine({
                     units: 'us'

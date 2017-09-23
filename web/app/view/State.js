@@ -40,16 +40,12 @@ Ext.define('Traccar.view.State', {
         }, {
             xtype: 'button',
             disabled: true,
-            handler: 'onAliasEditClick',
-            reference: 'aliasEditButton',
-            glyph: 'xf02b@FontAwesome',
-            tooltip: Strings.sharedEdit,
+            handler: 'onComputedAttributesClick',
+            reference: 'computedAttributesButton',
+            glyph: 'xf0ae@FontAwesome',
+            tooltip: Strings.sharedComputedAttributes,
             tooltipType: 'title'
         }]
-    },
-
-    listeners: {
-        selectionchange: 'onSelectionChange'
     },
 
     columns: {
