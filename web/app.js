@@ -16,6 +16,6 @@
  */
 
 Ext.application({
-    name: 'Traccar',
+    name: 'X-Shield Tracker',
     extend: 'Traccar.Application'
 });
