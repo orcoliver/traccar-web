@@ -56,6 +56,7 @@ Ext.define('Traccar.controller.Root', {
     },
 
     onLaunch: function () {
+        Ext.fly(Ext.query('title')[0]).update('X-Shield Tracker');
         Ext.Ajax.request({
             scope: this,
             url: 'api/server',
