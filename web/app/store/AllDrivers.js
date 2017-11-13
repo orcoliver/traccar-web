@@ -21,8 +21,9 @@ Ext.define('Traccar.store.AllDrivers', {
     model: 'Traccar.model.Driver',
 
     proxy: {
+    	withCredentials: true,
         type: 'rest',
-        url: 'api/drivers',
+        url: Traccar.Apicnf.baseUrl + 'api/drivers',
         extraParams: {
             all: true
         }

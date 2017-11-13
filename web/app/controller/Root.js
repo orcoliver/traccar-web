@@ -58,8 +58,9 @@ Ext.define('Traccar.controller.Root', {
     onLaunch: function () {
         Ext.fly(Ext.query('title')[0]).update('X-Shield Tracker');
         Ext.Ajax.request({
+            withCredentials: true,
             scope: this,
-            url: 'api/server',
+            url: Traccar.Apicnf.baseUrl + 'api/server',
             callback: this.onServerReturn
         });
     },
@@ -73,8 +74,9 @@ Ext.define('Traccar.controller.Root', {
                 parameters.token = token;
             }
             Ext.Ajax.request({
+                withCredentials: true,
                 scope: this,
-                url: 'api/session',
+                url: Traccar.Apicnf.baseUrl + 'api/session',
                 method: 'GET',
                 params: parameters,
                 callback: this.onSessionReturn
@@ -180,15 +182,17 @@ Ext.define('Traccar.controller.Root', {
 
     asyncUpdate: function (first) {
         var self = this, protocol, pathname, socket;
-        protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        pathname = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
-        socket = new WebSocket(protocol + '//' + window.location.host + pathname + 'api/socket');
+        //protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        //pathname = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+        //socket = new WebSocket(protocol + '//' + window.location.host + pathname + 'api/socket');
+        socket = new WebSocket(Traccar.Apicnf.socketUrl + 'api/socket');
 
         socket.onclose = function () {
             Traccar.app.showToast(Strings.errorSocket, Strings.errorTitle);
 
             Ext.Ajax.request({
-                url: 'api/devices',
+                withCredentials: true,
+                url: Traccar.Apicnf.baseUrl + 'api/devices',
                 success: function (response) {
                     self.updateDevices(Ext.decode(response.responseText));
                 },
@@ -200,7 +204,8 @@ Ext.define('Traccar.controller.Root', {
             });
 
             Ext.Ajax.request({
-                url: 'api/positions',
+                withCredentials: true,
+                url: Traccar.Apicnf.baseUrl + 'api/positions',
                 headers: {
                     Accept: 'application/json'
                 },

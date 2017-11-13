@@ -52,8 +52,9 @@ Ext.define('Traccar.view.permissions.BaseController', {
         data[this.getView().baseObjectName] = this.getView().baseObject;
         data[this.getView().linkObjectName] = record.getId();
         Ext.Ajax.request({
+            withCredentials: true,
             scope: this,
-            url: 'api/permissions',
+            url: Traccar.Apicnf.baseUrl + 'api/permissions',
             jsonData: Ext.util.JSON.encode(data),
             callback: function (options, success, response) {
                 if (!success) {
@@ -69,9 +70,10 @@ Ext.define('Traccar.view.permissions.BaseController', {
         data[this.getView().baseObjectName] = this.getView().baseObject;
         data[this.getView().linkObjectName] = record.getId();
         Ext.Ajax.request({
+            withCredentials: true,
             scope: this,
             method: 'DELETE',
-            url: 'api/permissions',
+            url: Traccar.Apicnf.baseUrl + 'api/permissions',
             jsonData: Ext.util.JSON.encode(data),
             callback: function (options, success, response) {
                 if (!success) {

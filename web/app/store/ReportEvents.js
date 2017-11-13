@@ -20,8 +20,9 @@ Ext.define('Traccar.store.ReportEvents', {
     model: 'Traccar.model.Event',
 
     proxy: {
+        withCredentials: true,
         type: 'rest',
-        url: 'api/reports/events',
+        url: Traccar.Apicnf.baseUrl + 'api/reports/events',
         headers: {
             'Accept': 'application/json'
         },

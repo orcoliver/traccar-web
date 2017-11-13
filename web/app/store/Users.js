@@ -20,8 +20,9 @@ Ext.define('Traccar.store.Users', {
     model: 'Traccar.model.User',
 
     proxy: {
+    	withCredentials: true,
         type: 'rest',
-        url: 'api/users',
+        url: Traccar.Apicnf.baseUrl + 'api/users',
         writer: {
             writeAllFields: true
         }

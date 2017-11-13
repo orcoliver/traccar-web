@@ -23,9 +23,10 @@ Ext.define('Traccar.view.dialog.RegisterController', {
         var form = this.lookupReference('form');
         if (form.isValid()) {
             Ext.Ajax.request({
+                withCredentials: true,
                 scope: this,
                 method: 'POST',
-                url: 'api/users',
+                url: Traccar.Apicnf.baseUrl + 'api/users',
                 jsonData: form.getValues(),
                 callback: this.onCreateReturn
             });

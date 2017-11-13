@@ -21,8 +21,9 @@ Ext.define('Traccar.store.Commands', {
     model: 'Traccar.model.Command',
 
     proxy: {
+    	withCredentials: true,
         type: 'rest',
-        url: 'api/commands',
+        url: Traccar.Apicnf.baseUrl + 'api/commands',
         writer: {
             writeAllFields: true
         }

@@ -20,8 +20,9 @@ Ext.define('Traccar.store.Positions', {
     model: 'Traccar.model.Position',
 
     proxy: {
+    	withCredentials: true,
         type: 'rest',
-        url: 'api/positions',
+        url: Traccar.Apicnf.baseUrl + 'api/positions',
         headers: {
             'Accept': 'application/json'
         }

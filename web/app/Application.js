@@ -20,6 +20,7 @@ Ext.define('Traccar.Application', {
     name: 'Traccar',
 
     requires: [
+        'Traccar.Apicnf',
         'Traccar.Style',
         'Traccar.AttributeFormatter'
     ],

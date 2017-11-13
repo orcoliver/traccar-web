@@ -20,8 +20,9 @@ Ext.define('Traccar.store.AllGroups', {
     model: 'Traccar.model.Group',
 
     proxy: {
+    	withCredentials: true,
         type: 'rest',
-        url: 'api/groups',
+        url: Traccar.Apicnf.baseUrl + 'api/groups',
         extraParams: {
             all: true
         }

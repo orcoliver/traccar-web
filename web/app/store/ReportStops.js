@@ -21,8 +21,9 @@ Ext.define('Traccar.store.ReportStops', {
     model: 'Traccar.model.ReportStop',
 
     proxy: {
+        withCredentials: true,
         type: 'rest',
-        url: 'api/reports/stops',
+        url: Traccar.Apicnf.baseUrl + 'api/reports/stops',
         headers: {
             'Accept': 'application/json'
         },

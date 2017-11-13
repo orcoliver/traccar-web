@@ -20,8 +20,9 @@ Ext.define('Traccar.store.AllDevices', {
     model: 'Traccar.model.Device',
 
     proxy: {
+    	withCredentials: true,
         type: 'rest',
-        url: 'api/devices',
+        url: Traccar.Apicnf.baseUrl + 'api/devices',
         extraParams: {
             all: true
         }

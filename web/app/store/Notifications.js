@@ -20,8 +20,9 @@ Ext.define('Traccar.store.Notifications', {
     model: 'Traccar.model.Notification',
 
     proxy: {
+    	withCredentials: true,
         type: 'rest',
-        url: 'api/notifications',
+        url: Traccar.Apicnf.baseUrl + 'api/notifications',
         writer: {
             writeAllFields: true
         }

@@ -21,8 +21,9 @@ Ext.define('Traccar.store.ComputedAttributes', {
     model: 'Traccar.model.ComputedAttribute',
 
     proxy: {
+    	withCredentials: true,
         type: 'rest',
-        url: 'api/attributes/computed',
+        url: Traccar.Apicnf.baseUrl + 'api/attributes/computed',
         writer: {
             writeAllFields: true
         }

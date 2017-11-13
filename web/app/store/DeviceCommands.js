@@ -21,8 +21,9 @@ Ext.define('Traccar.store.DeviceCommands', {
     model: 'Traccar.model.Command',
 
     proxy: {
+        withCredentials: true,
         type: 'rest',
-        url: 'api/commands/send',
+        url: Traccar.Apicnf.baseUrl + 'api/commands/send',
         listeners: {
             'exception': function (proxy, response) {
                 Traccar.app.showError(response);

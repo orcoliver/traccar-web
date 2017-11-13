@@ -362,6 +362,7 @@ Ext.define('Traccar.view.ReportController', {
 
     downloadFile: function (requestUrl, requestParams) {
         Ext.Ajax.request({
+            withCredentials: true,
             url: requestUrl,
             method: 'GET',
             params: requestParams,

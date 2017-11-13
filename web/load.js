@@ -149,32 +149,32 @@
     proj4jsVersion = '2.4.3';
 
     if (debugMode) {
-        addScriptFile('//cdnjs.cloudflare.com/ajax/libs/extjs/' + extjsVersion + '/ext-all-debug.js');
-        addScriptFile('//cdnjs.cloudflare.com/ajax/libs/extjs/' + extjsVersion + '/packages/charts/classic/charts-debug.js');
+        addScriptFile('libs/extjs/ext-all-debug.js');
+        addScriptFile('libs/extjs/packages/charts/classic/charts-debug.js');
     } else {
-        addScriptFile('//cdnjs.cloudflare.com/ajax/libs/extjs/' + extjsVersion + '/ext-all.js');
-        addScriptFile('//cdnjs.cloudflare.com/ajax/libs/extjs/' + extjsVersion + '/packages/charts/classic/charts.js');
+        addScriptFile('libs/extjs/ext-all.js');
+        addScriptFile('libs/extjs/packages/charts/classic/charts.js');
     }
-    addScriptFile('//cdnjs.cloudflare.com/ajax/libs/extjs/' + extjsVersion + '/classic/locale/locale-' + locale.languages[locale.language].code + '.js');
+    addScriptFile('libs/extjs/classic/locale/locale-' + locale.languages[locale.language].code + '.js');
 
-    addStyleFile('//cdnjs.cloudflare.com/ajax/libs/extjs/' + extjsVersion + '/classic/theme-triton/resources/theme-triton-all.css');
-    addScriptFile('//cdnjs.cloudflare.com/ajax/libs/extjs/' + extjsVersion + '/classic/theme-triton/theme-triton.js');
+    addStyleFile('libs/extjs/classic/theme-triton/resources/theme-triton-all.css');
+    addScriptFile('libs/extjs/classic/theme-triton/theme-triton.js');
 
-    addStyleFile('//cdnjs.cloudflare.com/ajax/libs/extjs/' + extjsVersion + '/packages/charts/classic/triton/resources/charts-all.css');
+    addStyleFile('libs/extjs/packages/charts/classic/triton/resources/charts-all.css');
 
-    addStyleFile('//cdnjs.cloudflare.com/ajax/libs/font-awesome/' + fontAwesomeVersion + '/css/font-awesome.min.css');
+    addStyleFile('libs/font-awesome/css/font-awesome.min.css');
 
-    addStyleFile('//cdnjs.cloudflare.com/ajax/libs/ol3/' + olVersion + '/ol.css');
+    addStyleFile('libs/ol3/ol.css');
     if (debugMode) {
-        addScriptFile('//cdnjs.cloudflare.com/ajax/libs/ol3/' + olVersion + '/ol-debug.js');
+        addScriptFile('libs/ol3/ol-debug.js');
     } else {
-        addScriptFile('//cdnjs.cloudflare.com/ajax/libs/ol3/' + olVersion + '/ol.js');
+        addScriptFile('libs/ol3/ol.js');
     }
 
     if (debugMode) {
-        addScriptFile('//cdnjs.cloudflare.com/ajax/libs/proj4js/' + proj4jsVersion + '/proj4-src.js');
+        addScriptFile('libs/proj4js/proj4-src.js');
     } else {
-        addScriptFile('//cdnjs.cloudflare.com/ajax/libs/proj4js/' + proj4jsVersion + '/proj4.js');
+        addScriptFile('libs/proj4js/proj4.js');
     }
 
     window.Images = ['arrow', 'default', 'animal', 'bicycle', 'boat', 'bus', 'car', 'crane', 'helicopter',

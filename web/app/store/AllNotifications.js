@@ -20,8 +20,9 @@ Ext.define('Traccar.store.AllNotifications', {
     model: 'Traccar.model.Notification',
 
     proxy: {
+    	withCredentials: true,
         type: 'rest',
-        url: 'api/notifications',
+        url: Traccar.Apicnf.baseUrl + 'api/notifications',
         extraParams: {
             all: true
         }

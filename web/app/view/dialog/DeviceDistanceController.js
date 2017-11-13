@@ -26,9 +26,10 @@ Ext.define('Traccar.view.dialog.DeviceDistanceController', {
             totalDistance: this.lookupReference('totalDistance').getValue()
         };
         Ext.Ajax.request({
+            withCredentials: true,
             scope: this,
             method: 'PUT',
-            url: 'api/devices/' + data.deviceId + '/distance',
+            url: Traccar.Apicnf.baseUrl + 'api/devices/' + data.deviceId + '/distance',
             jsonData: Ext.util.JSON.encode(data),
             callback: function (options, success, response) {
                 if (!success) {

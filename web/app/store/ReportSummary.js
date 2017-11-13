@@ -21,8 +21,9 @@ Ext.define('Traccar.store.ReportSummary', {
     model: 'Traccar.model.ReportSummary',
 
     proxy: {
+        withCredentials: true,
         type: 'rest',
-        url: 'api/reports/summary',
+        url: Traccar.Apicnf.baseUrl + 'api/reports/summary',
         headers: {
             'Accept': 'application/json'
         },

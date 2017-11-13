@@ -22,8 +22,9 @@ Ext.define('Traccar.store.EventPositions', {
     trackRemoved: false,
 
     proxy: {
+        withCredentials: true,
         type: 'rest',
-        url: 'api/positions',
+        url: Traccar.Apicnf.baseUrl + 'api/positions',
         headers: {
             'Accept': 'application/json'
         }

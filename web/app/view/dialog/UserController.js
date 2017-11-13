@@ -48,7 +48,8 @@ Ext.define('Traccar.view.dialog.UserController', {
 
     testNotification: function () {
         Ext.Ajax.request({
-            url: 'api/users/notifications/test',
+            withCredentials: true,
+            url: Traccar.Apicnf.baseUrl + 'api/users/notifications/test',
             method: 'POST',
             failure: function (response) {
                 Traccar.app.showError(response);

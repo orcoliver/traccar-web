@@ -23,7 +23,8 @@ Ext.define('Traccar.store.Events', {
     trackRemoved: false,
 
     proxy: {
+    	withCredentials: true,
         type: 'rest',
-        url: 'api/events'
+        url: Traccar.Apicnf.baseUrl + 'api/events'
     }
 });

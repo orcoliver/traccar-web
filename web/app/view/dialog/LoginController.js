@@ -37,9 +37,10 @@ Ext.define('Traccar.view.dialog.LoginController', {
             Ext.get('spinner').setVisible(true);
             this.getView().setVisible(false);
             Ext.Ajax.request({
+                withCredentials: true,
                 scope: this,
                 method: 'POST',
-                url: 'api/session',
+                url: Traccar.Apicnf.baseUrl + 'api/session',
                 params: form.getValues(),
                 callback: function (options, success, response) {
                     var user, password;
@@ -70,9 +71,10 @@ Ext.define('Traccar.view.dialog.LoginController', {
         Ext.util.Cookies.clear('user');
         Ext.util.Cookies.clear('password');
         Ext.Ajax.request({
+            withCredentials: true,
             scope: this,
             method: 'DELETE',
-            url: 'api/session',
+            url: Traccar.Apicnf.baseUrl + 'api/session',
             callback: function () {
                 window.location.reload();
             }

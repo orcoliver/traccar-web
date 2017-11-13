@@ -20,7 +20,8 @@ Ext.define('Traccar.store.Statistics', {
     model: 'Traccar.model.Statistics',
 
     proxy: {
+    	withCredentials: true,
         type: 'rest',
-        url: 'api/statistics'
+        url: Traccar.Apicnf.baseUrl + 'api/statistics'
     }
 });

@@ -21,8 +21,9 @@ Ext.define('Traccar.store.Calendars', {
     model: 'Traccar.model.Calendar',
 
     proxy: {
+    	withCredentials: true,
         type: 'rest',
-        url: 'api/calendars',
+        url: Traccar.Apicnf.baseUrl + 'api/calendars',
         writer: {
             writeAllFields: true
         }

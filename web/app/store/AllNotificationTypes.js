@@ -21,8 +21,9 @@ Ext.define('Traccar.store.AllNotificationTypes', {
     model: 'Traccar.model.KnownNotification',
 
     proxy: {
+        withCredentials: true,
         type: 'rest',
-        url: 'api/notifications/types',
+        url: Traccar.Apicnf.baseUrl + 'api/notifications/types',
         listeners: {
             'exception': function (proxy, response) {
                 Traccar.app.showError(response);

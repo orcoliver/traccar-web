@@ -30,8 +30,9 @@ Ext.define('Traccar.view.dialog.SendCommandController', {
         record = button.up('window').down('form').getRecord();
 
         Ext.Ajax.request({
+            withCredentials: true,
             scope: this,
-            url: 'api/commands/send',
+            url: Traccar.Apicnf.baseUrl + 'api/commands/send',
             jsonData: record.getData(),
             callback: this.onSendResult
         });

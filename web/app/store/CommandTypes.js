@@ -21,8 +21,9 @@ Ext.define('Traccar.store.CommandTypes', {
     model: 'Traccar.model.KnownCommand',
 
     proxy: {
+        withCredentials: true,
         type: 'rest',
-        url: 'api/commands/types',
+        url: Traccar.Apicnf.baseUrl + 'api/commands/types',
         listeners: {
             'exception': function (proxy, response) {
                 Traccar.app.showError(response);
