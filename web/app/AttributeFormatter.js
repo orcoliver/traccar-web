@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 - 2016 Anton Tananaev (anton@traccar.org)
+ * Copyright 2015 - 2018 Anton Tananaev (anton@traccar.org)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -97,6 +97,19 @@ Ext.define('Traccar.AttributeFormatter', {
         return null;
     },
 
+    calendarIdFormatter: function (value) {
+        var calendar, store;
+        if (value !== 0) {
+            store = Ext.getStore('AllCalendars');
+            if (store.getTotalCount() === 0) {
+                store = Ext.getStore('Calendars');
+            }
+            calendar = store.getById(value);
+            return calendar ? calendar.get('name') : '';
+        }
+        return null;
+    },
+
     driverUniqueIdFormatter: function (value) {
         var driver, store;
         if (value !== 0) {
@@ -106,6 +119,19 @@ Ext.define('Traccar.AttributeFormatter', {
             }
             driver = store.findRecord('uniqueId', value, 0, false, true, true);
             return driver ? value + ' (' + driver.get('name') + ')' : value;
+        }
+        return null;
+    },
+
+    maintenanceIdFormatter: function (value) {
+        var maintenance, store;
+        if (value !== 0) {
+            store = Ext.getStore('AllMaintenances');
+            if (store.getTotalCount() === 0) {
+                store = Ext.getStore('Maintenances');
+            }
+            maintenance = store.getById(value);
+            return maintenance ? maintenance.get('name') : '';
         }
         return null;
     },
@@ -174,6 +200,10 @@ Ext.define('Traccar.AttributeFormatter', {
                 return this.groupIdFormatter;
             case 'geofenceId':
                 return this.geofenceIdFormatter;
+            case 'maintenanceId':
+                return this.maintenanceIdFormatter;
+            case 'calendarId':
+                return this.calendarIdFormatter;
             case 'lastUpdate':
                 return this.lastUpdateFormatter;
             case 'spentFuel':
@@ -242,6 +272,16 @@ Ext.define('Traccar.AttributeFormatter', {
                 return function (value) {
                     return value;
                 };
+        }
+    },
+
+    renderAttribute: function (value, attribute) {
+        if (attribute && attribute.get('dataType') === 'speed') {
+            return Ext.getStore('SpeedUnits').formatValue(value, Traccar.app.getAttributePreference('speedUnit', 'kn'), true);
+        } else if (attribute && attribute.get('dataType') === 'distance') {
+            return Ext.getStore('DistanceUnits').formatValue(value, Traccar.app.getAttributePreference('distanceUnit', 'km'), true);
+        } else {
+            return value;
         }
     }
 });
