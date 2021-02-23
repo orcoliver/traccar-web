@@ -37,6 +37,26 @@ Ext.define('Traccar.view.map.GeofenceMap', {
             listeners: {
                 select: 'onTypeSelect'
             }
+        }, '-', {
+            xtype: 'tbtext',
+            html: Strings.sharedImport
+        }, {
+            xtype: 'filefield',
+            name: 'file',
+            buttonConfig: {
+                glyph: 'xf093@FontAwesome',
+                text: '',
+                tooltip: Strings.sharedSelectFile,
+                tooltipType: 'title'
+            },
+            listeners: {
+                change: 'onFileChange',
+                afterrender: function (fileField) {
+                    fileField.fileInputEl.set({
+                        accept: '.gpx'
+                    });
+                }
+            }
         }, {
             xtype: 'tbfill'
         }, {
@@ -105,13 +125,14 @@ Ext.define('Traccar.view.map.GeofenceMap', {
     },
 
     addInteraction: function (type) {
+        var self = this;
         this.draw = new ol.interaction.Draw({
             features: this.features,
             type: type
         });
         this.draw.on('drawstart', function () {
-            this.features.clear();
-        }, this);
+            self.features.clear();
+        });
         this.map.addInteraction(this.draw);
     },
 

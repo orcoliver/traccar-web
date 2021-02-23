@@ -27,6 +27,10 @@ Ext.define('Traccar.model.ReportSummary', {
         name: 'deviceName',
         type: 'string'
     }, {
+        name: 'startTime',
+        type: 'date',
+        dateFormat: 'c'
+    }, {
         name: 'maxSpeed',
         type: 'float',
         convert: Traccar.AttributeFormatter.getConverter('speed')
@@ -36,6 +40,14 @@ Ext.define('Traccar.model.ReportSummary', {
         convert: Traccar.AttributeFormatter.getConverter('speed')
     }, {
         name: 'distance',
+        type: 'float',
+        convert: Traccar.AttributeFormatter.getConverter('distance')
+    }, {
+        name: 'startOdometer',
+        type: 'float',
+        convert: Traccar.AttributeFormatter.getConverter('distance')
+    }, {
+        name: 'endOdometer',
         type: 'float',
         convert: Traccar.AttributeFormatter.getConverter('distance')
     }, {

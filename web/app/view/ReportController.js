@@ -32,12 +32,13 @@ Ext.define('Traccar.view.ReportController', {
         listen: {
             controller: {
                 '*': {
-                    selectdevice: 'selectDevice',
-                    showsingleevent: 'showSingleEvent',
-                    deselectfeature: 'deselectFeature'
+                    selectdevice: 'deselectReport',
+                    selectevent: 'deselectReport',
+                    showsingleevent: 'showSingleEvent'
                 },
                 'map': {
-                    selectreport: 'selectReport'
+                    selectreport: 'selectReport',
+                    deselectfeature: 'deselectFeature'
                 }
             },
             global: {
@@ -145,10 +146,11 @@ Ext.define('Traccar.view.ReportController', {
         disabled = !reportType || !devices || !time || this.reportProgress;
         this.lookupReference('showButton').setDisabled(disabled);
         this.lookupReference('exportButton').setDisabled(reportType === 'chart' || disabled);
+        this.lookupReference('emailButton').setDisabled(reportType === 'chart' || disabled);
     },
 
     onReportClick: function (button) {
-        var reportType, from, to, store, url;
+        var reportType, from, to, store, url, daily;
 
         this.getGrid().getSelectionModel().deselectAll();
 
@@ -161,6 +163,8 @@ Ext.define('Traccar.view.ReportController', {
             to = new Date(
                 this.toDate.getFullYear(), this.toDate.getMonth(), this.toDate.getDate(),
                 this.toTime.getHours(), this.toTime.getMinutes(), this.toTime.getSeconds(), this.toTime.getMilliseconds());
+
+            daily = reportType === 'daily';
 
             this.reportProgress = true;
             this.updateButtons();
@@ -184,17 +188,20 @@ Ext.define('Traccar.view.ReportController', {
                         groupId: this.groupId,
                         type: this.eventType,
                         from: from.toISOString(),
-                        to: to.toISOString()
+                        to: to.toISOString(),
+                        daily: daily
                     }
                 });
-            } else if (button.reference === 'exportButton') {
+            } else {
                 url = this.getGrid().getStore().getProxy().url;
-                this.downloadFile(url, {
+                this.excelReport(url, {
                     deviceId: this.deviceId,
                     groupId: this.groupId,
                     type: this.eventType,
                     from: Ext.Date.format(from, 'c'),
-                    to: Ext.Date.format(to, 'c')
+                    to: Ext.Date.format(to, 'c'),
+                    daily: daily,
+                    mail: button.reference === 'emailButton'
                 });
             }
         }
@@ -229,12 +236,6 @@ Ext.define('Traccar.view.ReportController', {
         }
     },
 
-    selectDevice: function (device) {
-        if (device) {
-            this.getGrid().getSelectionModel().deselectAll();
-        }
-    },
-
     selectReport: function (object) {
         var positionRelated, reportType = this.lookupReference('reportTypeField').getValue();
         if (object instanceof Traccar.model.Position) {
@@ -246,6 +247,12 @@ Ext.define('Traccar.view.ReportController', {
                 this.getGrid().getSelectionModel().select([positionRelated], false, true);
                 this.getGrid().getView().focusRow(positionRelated);
             }
+        }
+    },
+
+    deselectReport: function (object) {
+        if (object) {
+            this.deselectFeature();
         }
     },
 
@@ -371,7 +378,7 @@ Ext.define('Traccar.view.ReportController', {
         });
     },
 
-    downloadFile: function (requestUrl, requestParams) {
+    excelReport: function (requestUrl, requestParams) {
         Ext.Ajax.request({
             url: requestUrl,
             method: 'GET',
@@ -384,7 +391,7 @@ Ext.define('Traccar.view.ReportController', {
             scope: this,
             callback: function (options, success, response) {
                 var disposition, filename, type, blob, url, downloadUrl;
-                if (success) {
+                if (success && !requestParams.mail) {
                     disposition = response.getResponseHeader('Content-Disposition');
                     filename = disposition.slice(disposition.indexOf('=') + 1, disposition.length);
                     type = response.getResponseHeader('Content-Type');
@@ -424,7 +431,7 @@ Ext.define('Traccar.view.ReportController', {
         } else if (newValue === 'events') {
             this.getGrid().reconfigure('ReportEvents', this.eventsColumns);
             this.getView().getLayout().setActiveItem('grid');
-        } else if (newValue === 'summary') {
+        } else if (newValue === 'summary' || newValue === 'daily') {
             this.getGrid().reconfigure('ReportSummary', this.summaryColumns);
             this.getView().getLayout().setActiveItem('grid');
         } else if (newValue === 'trips') {
@@ -535,8 +542,21 @@ Ext.define('Traccar.view.ReportController', {
         dataIndex: 'deviceId',
         renderer: Traccar.AttributeFormatter.getFormatter('deviceId')
     }, {
+        text: Strings.reportStartDate,
+        dataIndex: 'startTime',
+        xtype: 'datecolumn',
+        renderer: Traccar.AttributeFormatter.dateFormatter
+    }, {
         text: Strings.sharedDistance,
         dataIndex: 'distance',
+        renderer: Traccar.AttributeFormatter.getFormatter('distance')
+    }, {
+        text: Strings.reportStartOdometer,
+        dataIndex: 'startOdometer',
+        renderer: Traccar.AttributeFormatter.getFormatter('distance')
+    }, {
+        text: Strings.reportEndOdometer,
+        dataIndex: 'endOdometer',
         renderer: Traccar.AttributeFormatter.getFormatter('distance')
     }, {
         text: Strings.reportAverageSpeed,
@@ -566,6 +586,10 @@ Ext.define('Traccar.view.ReportController', {
         xtype: 'datecolumn',
         renderer: Traccar.AttributeFormatter.getFormatter('startTime')
     }, {
+        text: Strings.reportStartOdometer,
+        dataIndex: 'startOdometer',
+        renderer: Traccar.AttributeFormatter.getFormatter('distance')
+    }, {
         text: Strings.reportStartAddress,
         dataIndex: 'startAddress',
         renderer: Traccar.AttributeFormatter.getFormatter('address')
@@ -574,6 +598,10 @@ Ext.define('Traccar.view.ReportController', {
         dataIndex: 'endTime',
         xtype: 'datecolumn',
         renderer: Traccar.AttributeFormatter.getFormatter('endTime')
+    }, {
+        text: Strings.reportEndOdometer,
+        dataIndex: 'endOdometer',
+        renderer: Traccar.AttributeFormatter.getFormatter('distance')
     }, {
         text: Strings.reportEndAddress,
         dataIndex: 'endAddress',
@@ -613,6 +641,10 @@ Ext.define('Traccar.view.ReportController', {
         dataIndex: 'startTime',
         xtype: 'datecolumn',
         renderer: Traccar.AttributeFormatter.getFormatter('startTime')
+    }, {
+        text: Strings.positionOdometer,
+        dataIndex: 'startOdometer',
+        renderer: Traccar.AttributeFormatter.getFormatter('distance')
     }, {
         text: Strings.positionAddress,
         dataIndex: 'address',
