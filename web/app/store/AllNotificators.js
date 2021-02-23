@@ -1,6 +1,6 @@
 /*
- * Copyright 2016 Anton Tananaev (anton@traccar.org)
- * Copyright 2016 Andrey Kunitsyn (andrey@traccar.org)
+ * Copyright 2018 Anton Tananaev (anton@traccar.org)
+ * Copyright 2018 Andrey Kunitsyn (andrey@traccar.org)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Ext.define('Traccar.store.ReportTrips', {
+Ext.define('Traccar.store.AllNotificators', {
     extend: 'Ext.data.Store',
-    model: 'Traccar.model.ReportTrip',
+    model: 'Traccar.model.KnownNotificator',
 
     proxy: {
         type: 'rest',
-        url: 'api/reports/trips',
-        timeout: Traccar.Style.reportTimeout,
-        headers: {
-            'Accept': 'application/json'
-        },
+        url: 'api/notifications/notificators',
         listeners: {
-            exception: function (proxy, exception) {
-                Traccar.app.showError(exception);
+            exception: function (proxy, response) {
+                Traccar.app.showError(response);
             }
         }
     }

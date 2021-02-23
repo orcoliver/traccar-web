@@ -60,15 +60,29 @@ Ext.define('Traccar.AttributeFormatter', {
         return Ext.getStore('VolumeUnits').convertValue(value, Traccar.app.getAttributePreference('volumeUnit'));
     },
 
+    hoursFormatter: function (value) {
+        return Ext.getStore('HoursUnits').formatValue(value, 'h');
+    },
+
+    hoursConverter: function (value) {
+        return Ext.getStore('HoursUnits').convertValue(value, 'h');
+    },
+
     durationFormatter: function (value) {
-        var hours, minutes;
-        hours = Math.floor(value / 3600000);
-        minutes = Math.floor(value % 3600000 / 60000);
-        return hours + ' ' + Strings.sharedHourAbbreviation + ' ' + minutes + ' ' + Strings.sharedMinuteAbbreviation;
+        return Ext.getStore('HoursUnits').formatValue(value, 'h', true);
     },
 
     deviceIdFormatter: function (value) {
-        return Ext.getStore('Devices').getById(value).get('name');
+        var device, store;
+        if (value !== 0) {
+            store = Ext.getStore('AllDevices');
+            if (store.getTotalCount() === 0) {
+                store = Ext.getStore('Devices');
+            }
+            device = store.getById(value);
+            return device ? device.get('name') : '';
+        }
+        return null;
     },
 
     groupIdFormatter: function (value) {
@@ -251,6 +265,8 @@ Ext.define('Traccar.AttributeFormatter', {
                 return this.numberFormatterFactory(Traccar.Style.numberPrecision, '&deg;C');
             case 'volume':
                 return this.volumeFormatter;
+            case 'hours':
+                return this.hoursFormatter;
             case 'consumption':
                 return this.numberFormatterFactory(Traccar.Style.numberPrecision, Strings.sharedLiterPerHourAbbreviation);
             default:
@@ -268,6 +284,8 @@ Ext.define('Traccar.AttributeFormatter', {
                 return this.speedConverter;
             case 'volume':
                 return this.volumeConverter;
+            case 'hours':
+                return this.hoursConverter;
             default:
                 return function (value) {
                     return value;
@@ -280,6 +298,8 @@ Ext.define('Traccar.AttributeFormatter', {
             return Ext.getStore('SpeedUnits').formatValue(value, Traccar.app.getAttributePreference('speedUnit', 'kn'), true);
         } else if (attribute && attribute.get('dataType') === 'distance') {
             return Ext.getStore('DistanceUnits').formatValue(value, Traccar.app.getAttributePreference('distanceUnit', 'km'), true);
+        } else if (attribute && attribute.get('dataType') === 'hours') {
+            return Ext.getStore('HoursUnits').formatValue(value, 'h', true);
         } else {
             return value;
         }
