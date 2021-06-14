@@ -1,4 +1,5 @@
 import React from 'react';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { Switch, Route } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import MainPage from './MainPage';
@@ -29,14 +30,18 @@ import ComputedAttributePage from './settings/ComputedAttributePage';
 import MaintenancesPage from './settings/MaintenancesPage';
 import MaintenancePage from './settings/MaintenancePage';
 import StatisticsPage from './admin/StatisticsPage';
+import CachingController from './CachingController';
+
+import theme from './theme';
 
 const App = () => {
   const initialized = useSelector(state => !!state.session.server && !!state.session.user);
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <SocketController />
+      <CachingController />
       <Switch>
         <Route exact path='/login' component={LoginPage} />
         <Route>
@@ -70,7 +75,7 @@ const App = () => {
           )}
         </Route>
       </Switch>
-    </>
+    </ThemeProvider>
   );
 }
 

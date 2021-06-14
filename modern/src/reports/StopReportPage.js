@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Paper } from '@material-ui/core';
-import t from '../common/localization';
+import { DataGrid } from '@material-ui/data-grid';
+import { useTheme } from "@material-ui/core/styles";
 import { formatDistance, formatHours, formatDate, formatVolume } from '../common/formatter';
 import ReportFilter from './ReportFilter';
 import ReportLayoutPage from './ReportLayoutPage';
 import { useAttributePreference } from '../common/preferences';
+import t from '../common/localization';
 
 const Filter = ({ setItems }) => {
 
@@ -28,37 +29,66 @@ const Filter = ({ setItems }) => {
 
 const StopReportPage = () => {
 
+  const theme = useTheme();
+
   const distanceUnit = useAttributePreference('distanceUnit');
+  const volumeUnit = useAttributePreference('volumeUnit');
+
   const [items, setItems] = useState([]);
+
+  const columns = [{
+    headerName: t('reportStartTime'),
+    field: 'startTime',
+    type: 'dateTime',
+    width: theme.dimensions.columnWidthDate,
+    valueFormatter: ({ value }) => formatDate(value), 
+  }, {
+    headerName: t('positionOdometer'),
+    field: 'startOdometer',
+    type: 'number',
+    width: theme.dimensions.columnWidthNumber,
+    valueFormatter: ({ value }) => formatDistance(value, distanceUnit),
+  }, {
+    headerName: t('positionAddress'),
+    field: 'address',
+    type: 'string',
+    hide: true,
+    width: theme.dimensions.columnWidthString,    
+  }, {
+    headerName: t('reportEndTime'),
+    field: 'endTime',
+    type: 'dateTime',
+    width: theme.dimensions.columnWidthDate,
+    valueFormatter: ({ value }) => formatDate(value),
+  }, {
+    headerName: t('reportDuration'),
+    field: 'duration',
+    type: 'string',
+    width: theme.dimensions.columnWidthString,
+    valueFormatter: ({ value }) => formatHours(value),
+  }, {
+    headerName: t('reportEngineHours'),
+    field: 'engineHours',
+    type: 'string',
+    width: theme.dimensions.columnWidthString,
+    valueFormatter: ({ value }) => formatHours(value),
+  }, {
+    headerName: t('reportSpentFuel'),
+    field: 'spentFuel',
+    type: 'number',
+    width: theme.dimensions.columnWidthNumber,
+    hide: true,
+    valueFormatter: ({ value }) => formatVolume(value, volumeUnit),    
+  }]
   
   return (
     <ReportLayoutPage filter={<Filter setItems={setItems} />}>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>{t('reportStartTime')}</TableCell>
-              <TableCell>{t('positionOdometer')}</TableCell>
-              <TableCell>{t('reportEndTime')}</TableCell>
-              <TableCell>{t('reportDuration')}</TableCell>
-              <TableCell>{t('reportEngineHours')}</TableCell>
-              <TableCell>{t('reportSpentFuel')}</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {items.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{formatDate(item.startTime)}</TableCell>
-                <TableCell>{formatDistance(item.startOdometer, distanceUnit)}</TableCell>
-                <TableCell>{formatDate(item.endTime)}</TableCell>
-                <TableCell>{formatHours(item.duration)}</TableCell>
-                <TableCell>{formatHours(item.engineHours)}</TableCell>
-                <TableCell>{formatVolume(item.spentFuel)}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <DataGrid
+        rows={items} 
+        columns={columns} 
+        hideFooter 
+        autoHeight
+        getRowId={() => Math.random()} />
     </ReportLayoutPage>
   );
 };
